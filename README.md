@@ -21,6 +21,8 @@ This collection is meant for **use on GitLab** - it is only hosted on GitHub for
 In order to import the components contained in this collection into **your GitLab's CI/CD Catalog**,
 follow these steps:
 
-1. **Import** this project to GitLab using GitLab's [Repository by URL import](https://docs.gitlab.com/ee/user/project/import/repo_by_url.html).
+1. **Import** this project to GitLab using GitLab's [Repository by URL import](https://docs.gitlab.com/ee/user/project/import/repo_by_url.html). **Make sure to set a description**, as this is needed for the project to be featured in the CI/CD catalog.
 2. [Set the imported project as a catalog project](https://docs.gitlab.com/ee/ci/components/#set-a-component-project-as-a-catalog-project).
-3. [Run the project's pipeline], specifying the project's newest tag for the **Run for branch name or tag** option.
+3. Run the project's pipeline, specifying the project's newest tag for the **Run for branch name or tag** option, by navigating to **Build > Pipelines > Run Pipeline** in the imported project.
+4. After running the pipeline and thus creating a release for the project on GitLab, the CI/CD catalog should
+now feature its contained CI/CD components.
