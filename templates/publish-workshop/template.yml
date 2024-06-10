@@ -1,0 +1,70 @@
+spec:
+  inputs:
+    educates-version:
+      default: 2.6.0
+      description: "Version of educates to use for building and publishing workshop resources"
+      type: string
+    path:
+      default: "."
+      description: "Relative directory path under $CI_PROJECT_NAME to workshop files."
+      type: string
+    workshop-resource-file:
+      default: resources/workshop.yaml
+      description: "Relative path under workshop directory to the Workshop resource file."
+      type: string
+---
+workflow:
+  rules:
+    - if: $CI_COMMIT_TAG
+
+stages: [build, release]
+
+default:
+  image: ubuntu:22.04
+
+create-workshop-definition:
+  stage: build
+  script: |
+    # download dependencies
+    apt update && apt install -y curl libdigest-sha-perl
+    curl -L https://carvel.dev/install.sh | bash
+    imgpkg pull -i ghcr.io/vmware-tanzu-labs/educates-client-programs:$[[ inputs.educates-version ]] -o /tmp/client-programs
+    mv /tmp/client-programs/educates-linux-amd64 /usr/local/bin/educates
+    # build workshop resources
+    mkdir -p /tmp/workshops/${CI_PROJECT_NAME}/resources
+    educates publish-workshop $[[ inputs.path ]] \
+      --workshop-file $[[ inputs.workshop-resource-file ]] \
+      --export-workshop ./workshop.yaml \
+      --image-repository=${CI_REGISTRY_IMAGE} \
+      --workshop-version=${CI_COMMIT_TAG} \
+      --registry-username=${CI_REGISTRY_USER} \
+      --registry-password=${CI_REGISTRY_PASSWORD}
+  artifacts:
+    paths:
+      - ./workshop.yaml
+
+upload-workshop-definition:
+  stage: build
+  needs:
+    - create-workshop-definition
+  script: |
+    # download dependencies
+    apt update && apt install -y curl libdigest-sha-perl
+    # upload workload resources to container registry
+    curl --header "JOB-TOKEN: $CI_JOB_TOKEN" \
+      --upload-file ./workshop.yaml \
+      "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/workshop-definition/${CI_COMMIT_TAG}/workshop.yaml"
+
+create-gitlab-release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  script:
+    - echo "running release_job"
+  release:
+    tag_name: "$CI_COMMIT_TAG"
+    description: "$CI_COMMIT_TAG_MESSAGE"
+    assets:
+      links:
+        - name: Workshop Definition
+          link_type: package
+          url: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/workshop-definition/${CI_COMMIT_TAG}/workshop.yaml
