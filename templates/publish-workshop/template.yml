@@ -1,7 +1,7 @@
 spec:
   inputs:
     educates-version:
-      default: 2.6.0
+      default: 2.7.1
       description: "Version of educates to use for building and publishing workshop resources"
       type: string
     path:

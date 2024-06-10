@@ -87,7 +87,7 @@ project's `.gitlab-ci.yml`:
 | Name                            | Default | Type     | Description                        |
 |---------------------------------|----------|----------|------------------------------------|
 | `path`                          | `.`    | String   | Relative directory path under `$GITHUB_WORKSPACE` to workshop files. Defaults to "`.`". |
-| `educates-version`              | `2.6.0` | String | Version of the Educates CLI to be used for creating the workshop assets. |
+| `educates-version`              | `2.7.1` | String | Version of the Educates CLI to be used for creating the workshop assets. |
 | `trainingportal-resource-file`  | `resources/trainingportal.yaml`    | String   | Relative path under workshop directory to the `TrainingPortal` resource file. |
 | `workshop-resource-file`        | `resources/workshop.yaml`    | String   | Relative path under workshop directory to the `Workshop` resource file. |
 
@@ -96,7 +96,7 @@ You would define inputs in your project's `.gitlab-ci.yml` like this:
 ```yaml
 inputs:
   path: "./workshops/k8s-introduction"
-  educates-version: "2.7.1"
+  educates-version: "2.6.0"
 include:
   - component: $CI_SERVER_FQDN/$PATH/$TO/$GITLAB/$PROJECT/publish-workshop@0.2.7
 ```
