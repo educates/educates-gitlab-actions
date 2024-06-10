@@ -19,4 +19,8 @@ Importing Components into the GitLab CI/CD Catalog
 
 This collection is meant for **use on GitLab** - it is only hosted on GitHub for convenience.
 In order to import the components contained in this collection into **your GitLab's CI/CD Catalog**,
-[import the repository into your GitLab instance](https://docs.gitlab.com/ee/user/project/import/github.html).
+follow these steps:
+
+1. **Import** this project to GitLab using GitLab's [Repository by URL import](https://docs.gitlab.com/ee/user/project/import/repo_by_url.html).
+2. [Set the imported project as a catalog project](https://docs.gitlab.com/ee/ci/components/#set-a-component-project-as-a-catalog-project).
+3. [Run the project's pipeline], specifying the project's newest tag for the **Run for branch name or tag** option.
